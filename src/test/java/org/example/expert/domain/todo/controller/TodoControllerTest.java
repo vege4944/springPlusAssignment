@@ -2,6 +2,7 @@ package org.example.expert.domain.todo.controller;
 
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
+import org.example.expert.domain.common.exception.NotFoundException;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.service.TodoService;
 import org.example.expert.domain.user.dto.response.UserResponse;
@@ -63,15 +64,28 @@ class TodoControllerTest {
         // given
         long todoId = 1L;
 
+//        // when
+//        when(todoService.getTodo(todoId))
+//                .thenThrow(new InvalidRequestException("Todo not found")); // 404 에러 상태 필요
+//
+//        // then
+//        mockMvc.perform(get("/todos/{todoId}", todoId))
+//                .andExpect(status().isBadRequest()) // isBadRequest == 400 상태 코드
+//                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name())) // 400 상태의 이름
+//                .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value())) // 400 상태의 코드
+//                .andExpect(jsonPath("$.message").value("Todo not found")); // 예외 메세지
+
+
+        // 67번줄~76번줄은 디버깅 해보았을 때 400이 나와야된다고 해서 bad request로 바꿔주었는데 NotFoundException을 만들어줘서 404로 나오게하면 어떨까 해서 실험? 해봄
         // when
         when(todoService.getTodo(todoId))
-                .thenThrow(new InvalidRequestException("Todo not found")); // 404 에러 상태 필요
+                .thenThrow(new NotFoundException("Todo not found")); // 404 에러 상태 필요
 
         // then
         mockMvc.perform(get("/todos/{todoId}", todoId))
-                .andExpect(status().isBadRequest()) // isBadRequest == 400 상태 코드
-                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name())) // 400 상태의 이름
-                .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value())) // 400 상태의 코드
+                .andExpect(status().isNotFound()) // isNotFound == 404 상태 코드
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.name())) // 404 상태의 이름
+                .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value())) // 404 상태의 코드
                 .andExpect(jsonPath("$.message").value("Todo not found")); // 예외 메세지
     }
 }
