@@ -35,7 +35,7 @@ class TodoControllerTest {
         // given
         long todoId = 1L;
         String title = "title";
-        AuthUser authUser = new AuthUser(1L, "email", UserRole.USER);
+        AuthUser authUser = new AuthUser(1L, "email", UserRole.USER, "nickname");
         User user = User.fromAuthUser(authUser);
         UserResponse userResponse = new UserResponse(user.getId(), user.getEmail());
         TodoResponse response = new TodoResponse(
@@ -65,13 +65,13 @@ class TodoControllerTest {
 
         // when
         when(todoService.getTodo(todoId))
-                .thenThrow(new InvalidRequestException("Todo not found"));
+                .thenThrow(new InvalidRequestException("Todo not found")); // 404 에러 상태 필요
 
         // then
         mockMvc.perform(get("/todos/{todoId}", todoId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
-                .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
-                .andExpect(jsonPath("$.message").value("Todo not found"));
+                .andExpect(status().isBadRequest()) // isBadRequest == 400 상태 코드
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name())) // 400 상태의 이름
+                .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value())) // 400 상태의 코드
+                .andExpect(jsonPath("$.message").value("Todo not found")); // 예외 메세지
     }
 }
