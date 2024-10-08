@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
-public interface TodoRepository extends JpaRepository<Todo, Long> {
+public interface TodoRepository extends JpaRepository<Todo, Long>, TodoRepositoryCustom { //다중 implements 구현 완료
 
     @Query("SELECT t FROM Todo t LEFT JOIN FETCH t.user u " + // level 2-7 FETCH 이미 전에 추가했었습니다!
             "WHERE (:weather IS NULL OR t.weather = :weather)" +
@@ -23,10 +23,11 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
                                                  @Param("endDate") Date endDate,
                                                  Pageable pageable);
 //신민아 튜터님께서 메소드명 간결하게 쓰는거 추천해주심! ex) getTodoByCondition / native query > jpql > query test
-    @Query("SELECT t FROM Todo t " +
-            "LEFT JOIN t.user " +
-            "WHERE t.id = :todoId")
-    Optional<Todo> findByIdWithUser(@Param("todoId") Long todoId);
+
+//    @Query("SELECT t FROM Todo t " +
+//            "LEFT JOIN t.user " +
+//            "WHERE t.id = :todoId")
+//    Optional<Todo> findByIdWithUser(@Param("todoId") Long todoId); // 상속을 받으면 자식껄로 덮어쓰게 됨
 }
 
 
