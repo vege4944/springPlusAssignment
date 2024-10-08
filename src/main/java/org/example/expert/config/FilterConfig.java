@@ -1,6 +1,7 @@
 package org.example.expert.config;
 
 import lombok.RequiredArgsConstructor;
+import org.example.expert.domain.user.service.CustomUserDetailService;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +11,13 @@ import org.springframework.context.annotation.Configuration;
 public class FilterConfig {
 
     private final JwtUtil jwtUtil;
+    private CustomUserDetailService customUserDetailService;
 
     @Bean
-    public FilterRegistrationBean<JwtFilter> jwtFilter() {
-        FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new JwtFilter(jwtUtil));
-        registrationBean.addUrlPatterns("/*"); // 필터를 적용할 URL 패턴을 지정합니다.
+    public FilterRegistrationBean<JwtAuthenticationFilter> jwtFilter() {
+        FilterRegistrationBean<JwtAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new JwtAuthenticationFilter(jwtUtil, customUserDetailService));
+        registrationBean.addUrlPatterns("/*"); // 필터를 적용할 URL 패턴을 지정
 
         return registrationBean;
     }

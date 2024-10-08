@@ -37,10 +37,27 @@ dependencies {
     // bcrypt
     implementation 'at.favre.lib:bcrypt:0.10.2'
 
-    // jwt
-    compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // 만약, java-jwt를 사용한다면 아래와 같이 추가합니다.
+    // implementation 'com.auth0:java-jwt:3.19.2'
+
+    // Spring Web (API를 위한 필수 의존성)
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Lombok (코드 간소화를 위해 사용)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Test dependencies (테스트용)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // jwt 라이브러리 (jjwt 또는 java-jwt 중 하나 사용)
+    compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5' // jjwt의 core 라이브러리
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'  // jjwt의 구현체
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5' // JSON 파싱을 위한 Jackson 의존성
 
     // QueryDSL
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
