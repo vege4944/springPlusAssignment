@@ -6,6 +6,7 @@ import org.example.expert.domain.common.exception.NotFoundException;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.service.TodoService;
 import org.example.expert.domain.user.dto.response.UserResponse;
+import org.example.expert.domain.user.entity.CustomUserDetails;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -32,12 +34,13 @@ class TodoControllerTest {
     private TodoService todoService;
 
     @Test
+    @WithMockUser(username = "testUser", roles = {"ADMIN"})
     void todo_단건_조회에_성공한다() throws Exception {
         // given
         long todoId = 1L;
         String title = "title";
-        AuthUser authUser = new AuthUser(1L, "email", UserRole.USER, "nickname");
-        User user = User.fromAuthUser(authUser);
+        CustomUserDetails customUserDetails = new CustomUserDetails(new User("test123@gmail.com", "teset123", UserRole.USER, "nickname"));
+        User user = User.fromAuthUser(customUserDetails);
         UserResponse userResponse = new UserResponse(user.getId(), user.getEmail());
         TodoResponse response = new TodoResponse(
                 todoId,
