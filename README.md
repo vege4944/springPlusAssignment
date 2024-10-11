@@ -3,7 +3,7 @@
 --------------------------------------------------------------
 
 ### Level 1: Spring & JPA
-1. @Transactional 에러 해결
+@Transactional 에러 해결
 이슈: Connection is read-only 에러 발생
 해결 방법: @Transactional 애너테이션으로 쓰기 권한 부여하여 문제 해결
 
